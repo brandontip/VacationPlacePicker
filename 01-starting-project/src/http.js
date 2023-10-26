@@ -20,4 +20,6 @@ export async function updateUserPlaces(places) {
     if(!response.ok) {
         throw new Error(data.message || 'Failed to update user places.');
     }
+
+    return data.message;
 }
