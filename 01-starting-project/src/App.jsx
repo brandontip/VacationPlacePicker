@@ -50,8 +50,18 @@ function App() {
         prevPickedPlaces.filter((place) => place.id !== selectedPlace.current.id)
     );
 
+
+    try {
+      await updateUserPlaces(userPlaces.filter(place=>place.id !== selectedPlace.current.id));
+    }
+    catch (error){
+      setUserPlaces(userPlaces); //we want stale userPlaces, i.e. unchanged
+      setErrorUpdatingPlaces(error);
+    }
+
+
     setModalIsOpen(false);
-  }, []);
+  }, [userPlaces]);
 
   function handleError(){
     setErrorUpdatingPlaces(null);
