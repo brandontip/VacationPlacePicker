@@ -1,5 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
-
+import { useRef, useState, useCallback } from 'react';
 import Places from './components/Places.jsx';
 import Modal from './components/Modal.jsx';
 import DeleteConfirmation from './components/DeleteConfirmation.jsx';
@@ -7,31 +6,14 @@ import logoImg from './assets/logo.png';
 import AvailablePlaces from './components/AvailablePlaces.jsx';
 import {fetchUserPlaces, updateUserPlaces} from './http.js';
 import Error from "./components/Error.jsx";
+import {useFetch} from "./hooks/useFetch.js";
 
 
 function App() {
   const selectedPlace = useRef();
-  const [isLoading, setIsFetching] = useState(true); //loading
-  const [error, setError] = useState(null); //error
-
-  const [userPlaces, setUserPlaces] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [errorUpdatingPlaces, setErrorUpdatingPlaces] = useState(null);
-
-  useEffect(() => {
-    async function fetchPlaces(){
-      setIsFetching(true);
-      try {
-        const userPlacesResult= await fetchUserPlaces();
-        setUserPlaces(userPlacesResult)
-      }
-      catch (error){
-        setError(error)
-      }
-      setIsFetching(false);
-    }
-    fetchPlaces();
-  }, []);
+  const { isLoading, fetchedData: userPlaces, setFetchedData: setUserPlaces,error} = useFetch(fetchUserPlaces,[]);
 
   function handleStartRemovePlace(place) {
     setModalIsOpen(true);
@@ -76,7 +58,6 @@ function App() {
       setUserPlaces(userPlaces); //we want stale userPlaces, i.e. unchanged
       setErrorUpdatingPlaces(error);
     }
-
 
     setModalIsOpen(false);
   }, [userPlaces]);
